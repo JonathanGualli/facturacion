@@ -27,9 +27,17 @@ export const verifyService = async () => {
 }
 
 // Servicio para listar facturas
-export const fetchFacturasService = async (page: number, pageSize: number) => {
+export const fetchFacturasService = async (page: number, pageSize: number, search: string = '') => {
+    
+    const params: any = { page, pageSize}
+
+    // Si existe algo en params lo mandamos, sino pues no.
+    if(search) {
+        params.search = search;
+    }
+
     const { data } = await axios.get(`${API_URL}/Facturacion/ListarFacturas`, {
-        params: { page, pageSize},
+        params: params,
         withCredentials: true });
     return data;
 }

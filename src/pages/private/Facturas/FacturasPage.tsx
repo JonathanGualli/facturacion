@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useFacturas } from "../../../hooks/useFacturas";
 import { InvoicesTable } from "../../../components/Factura/FacturaTable";
+import { useDebounce } from "../../../hooks/useDebounce";
 
 export const FacturasPage = () => {
 
@@ -9,63 +10,52 @@ export const FacturasPage = () => {
     pageSize: 10,
   });
 
-  const { data, isLoading, isPlaceholderData } = useFacturas(pagination.pageIndex + 1, pagination.pageSize);
+  // Estado del texto de búscqueda
+  const [searchTerm, setSearchTerm] = useState("");
 
-/*   const [facturas, setFacturas] = useState<any[]>([]); */
-//  const [viewMode, setViewMode] = useState<"cards" | "table">("table");
+  // Aplicamos el debounde
+  const debouncedSearch = useDebounce(searchTerm, 500);
+
+  // Enviamos el debounced al hook
+  const { data, isLoading, isPlaceholderData } = useFacturas(
+    pagination.pageIndex + 1, 
+    pagination.pageSize,
+    debouncedSearch
+  );
+
   const facturas = data?.data || [];
   const totalCount = data?.totalCount || 0;
 
-/*   useEffect(() => {
-    if (data) setFacturas(data);
-  }, [data]);
- */
+  // Si el usuario busca algo regresar a la página 1
+  useEffect(() => {
+    setPagination((prev) => ({...prev, pageIndex: 0}));
+  }, [debouncedSearch]);
+
   return (
     <div className="p-6">
       {/* Header + Switch */}
       <div className="flex justify-between items-center mb-6">
         <div>
           <h1 className="text-2xl font-bold">Facturas</h1>
+          <p className="text-gray-500 text-sm">Gestiona tus documentos electrónicos</p>
         </div>
 
-        {/* <div className="bg-gray-100 p-1 rounded-lg flex gap-1">
-          <button
-            onClick={() => setViewMode("table")}
-            className={`px-4 py-2 text-sm rounded-md transition ${
-              viewMode === "table"
-                ? "bg-white shadow text-gray-900"
-                : "text-gray-500"
-            }`}
-          >
-            📋 Tabla
-          </button>
+        <div className="w-1/3">
+          <input type="text"
+                 placeholder="Buscar por número (001-001...)"
+                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                 value={searchTerm}
+                 onChange={(e) => setSearchTerm(e.target.value)}/>
+        </div>
 
-          <button
-            onClick={() => setViewMode("cards")}
-            className={`px-4 py-2 text-sm rounded-md transition ${
-              viewMode === "cards"
-                ? "bg-white shadow text-gray-900"
-                : "text-gray-500"
-            }`}
-          >
-            🧾 Tarjeta
-          </button>
-        </div> */}
       </div>
-
-      {/* Content */}
-      {/* {isLoading ? (
-        <p>Cargando facturas...</p>
-      ) : viewMode === "cards" ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-          {facturas.map((factura) => (
-            <FacturaCard key={factura.id} factura={factura} />
-          ))}
-        </div>
-      ) : (
-        <InvoicesTable data={facturas}></InvoicesTable>
-      )} */}
-      <InvoicesTable data={facturas} totalCount={totalCount} pagination={pagination} setPagination={setPagination} isLoading={isLoading || isPlaceholderData} />
+      <InvoicesTable 
+        data={facturas} 
+        totalCount={totalCount} 
+        pagination={pagination} 
+        setPagination={setPagination} 
+        isLoading={isLoading || isPlaceholderData} 
+      />
     </div>
   );
 };
