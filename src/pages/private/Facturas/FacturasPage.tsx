@@ -47,6 +47,14 @@ export const FacturasPage = () => {
                  value={searchTerm}
                  onChange={(e) => setSearchTerm(e.target.value)}/>
         </div>
+        {/* Botón de Excel */}
+          <button
+         
+            className="flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition-all shadow-sm active:scale-95 whitespace-nowrap"
+          >
+   
+            <span className="font-medium">Exportar Excel</span>
+          </button>
 
       </div>
       <InvoicesTable 
