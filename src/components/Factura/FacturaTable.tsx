@@ -1,6 +1,6 @@
 import { getCoreRowModel, useReactTable, flexRender } from "@tanstack/react-table";
 import type { Invoice } from "../../models/factura.model";
-import { invoiceColumns } from "./Columns";
+import { invoiceColumns } from "./InvoiceColumns";
 
 interface Props {
   data: Invoice [];

@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const API_URL = 'https://facturacion.server.coorporativo.live/api';
-// const API_URL = 'https://localhost:44323/api';
+// const API_URL = 'https://facturacion.server.coorporativo.live/api';
+const API_URL = 'https://localhost:44323/api';
 
 export const loginService = async (email: string, password: string) => {
     const { data } = await axios.post(`${API_URL}/Auth/login`, { email, password }, {withCredentials: true});
@@ -27,9 +27,9 @@ export const verifyService = async () => {
 }
 
 // Servicio para listar facturas
-export const fetchFacturasService = async (page: number, pageSize: number, search: string = '') => {
+export const fetchFacturasService = async (page: number, pageSize: number, filterMethod: number, search: string = '') => {
     
-    const params: any = { page, pageSize}
+    const params: any = { page, pageSize, filterMethod }
 
     // Si existe algo en params lo mandamos, sino pues no.
     if(search) {
@@ -40,6 +40,7 @@ export const fetchFacturasService = async (page: number, pageSize: number, searc
         params: params,
         withCredentials: true });
     return data;
+    
 }
 
 // Servicio para descargar facturas
