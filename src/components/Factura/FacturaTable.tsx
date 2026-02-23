@@ -9,6 +9,7 @@ interface Props {
     pageIndex: number;
     pageSize: number;
   };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setPagination: (pagination: any) => void;
   isLoading: boolean;
 }
@@ -17,6 +18,7 @@ export function InvoicesTable({ data, totalCount, pagination, setPagination, isL
   
   const pageCount = Math.ceil(totalCount / pagination.pageSize);
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data,
     columns: invoiceColumns,
@@ -31,14 +33,14 @@ export function InvoicesTable({ data, totalCount, pagination, setPagination, isL
   });
 
   return (
-    <div className="rounded-xl border bg-white relative">
+    <div className="rounded-xl border  bg-white relative overflow-hidden">
       {isLoading && (
         <div className="absolute inset-0 bg-white/50 z-10 items-center justify-center flex">
           <span className="text-sm font-semibold text-gray-500">Cargando ...</span>
         </div>
       )}
       <table className="w-full">
-        <thead className="bg-gray-50">
+        <thead className="bg-blue-100">
           {table.getHeaderGroups().map(group => (
             <tr key={group.id}>
               {group.headers.map(header => (
