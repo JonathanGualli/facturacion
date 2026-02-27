@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API_URL = 'https://facturacion.server.coorporativo.live/api';
-// const API_URL = 'https://localhost:5121/api';
+// const API_URL = 'https://localhost:44323/api';
 
 interface FetchParams {
     page: number;
@@ -17,8 +17,8 @@ interface FetchParamsExcelexport {
     search?: string;
 }
 
-export const loginService = async (email: string, password: string) => {
-    const { data } = await axios.post(`${API_URL}/Auth/login`, { email, password }, { withCredentials: true });
+export const loginService = async (email: string, password: string, companyId?: number) => {
+    const { data } = await axios.post(`${API_URL}/Auth/login`, { email, password, companyId }, { withCredentials: true });
     return data;
 }
 

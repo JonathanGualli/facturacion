@@ -6,6 +6,7 @@ import type { AxiosError } from "axios";
 import { useVerifyLogin } from "../hooks/useVerifyLogin";
 import { useSignUp } from "../hooks/useSignUp";
 import { useLogOut } from "../hooks/useLogOut";
+import type { Company } from "../models/company.model";
 
 interface AuthProps{
     children: ReactNode;
@@ -14,12 +15,16 @@ interface ErrorItem {
   message: string;
 }
 
+// Definimos un tipo para la respuesta del API
+type LoginResponse = User | Company[];
+
 export const AuthProvider = ({ children }: AuthProps) => {
 
     const { data: verifyData, isLoading: isVerifying, isError: verifyError } = useVerifyLogin();
     // Funciona de esta foram, pero ..... no se porque ..... no entiendo la logica de este useeffect authcheked
     const [authChecked, setAuthChecked] = useState(false);
     const [user, setUser] = useState<User | null>(null);
+    const [companies, setCompanies] = useState<Array<Company>>([]); 
     const [errors, setErrors] = useState<string[]>([]);
     const loginMutation = useLogin();
     const signUpMutation = useSignUp();
@@ -47,17 +52,24 @@ export const AuthProvider = ({ children }: AuthProps) => {
         }
     }, [errors]);
 
-    const signIn = async (email: string, password: string) => {
+    const signIn = async (email: string, password: string, companyId?: number) => {
         setUser(null);
         setErrors([]);
         // Log the email and password for debugging purposes
         // console.log("signIn called with:", email, password);
+
         loginMutation.mutate(
-            { email, password },
+            { email, password, companyId},
             {
-                onSuccess: (data: User) => { 
-                    setUser(data); 
-                    setErrors([]);
+                onSuccess: (data: LoginResponse) => { 
+                    if(Array.isArray(data)){
+                        setCompanies(data);
+                        console.log(companies);
+                    } else { 
+                        setUser(data);
+                        setCompanies([]);
+                        setErrors([]);
+                    }
                 },
                 onError: (error: Error) => { 
                     console.log("AuthProvider: Login error", error);
@@ -104,6 +116,7 @@ export const AuthProvider = ({ children }: AuthProps) => {
     return (
         <AuthContext.Provider value={{
             user,
+            companies,
             signIn,
             signUp,
             logOut,

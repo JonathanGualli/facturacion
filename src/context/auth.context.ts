@@ -1,9 +1,11 @@
 import { createContext, useContext } from "react";
 import type { User } from "../models/user.model";
+import type { Company } from "../models/company.model";
 
 interface AuthContextProps {
     user: User | null;
-    signIn: (email: string, password: string) => void;
+    companies: Company[];
+    signIn: (email: string, password: string, companyId?: number) => void;
     signUp: (name: string, email: string, password: string) => void;
     logOut: () => void;
     isAuthenticated: boolean;

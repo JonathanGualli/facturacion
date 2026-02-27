@@ -3,6 +3,7 @@ import { useFacturas } from "../../../hooks/useFacturas";
 import { InvoicesTable } from "../../../components/Factura/FacturaTable";
 import { useDebounce } from "../../../hooks/useDebounce";
 import { useExportExcel } from "../../../hooks/useExportExcel";
+import { useAuthContext } from "../../../context/auth.context";
 
 export const FacturasPage = () => {
 
@@ -14,12 +15,15 @@ export const FacturasPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const debouncedSearch = useDebounce(searchTerm, 500);
   const [filterMethod, setFilterMethod] = useState(1);
+  const {user} = useAuthContext();
+  
 
   const { data, isLoading, isPlaceholderData } = useFacturas(
     pagination.pageIndex + 1, 
     pagination.pageSize,
     filterMethod,
-    debouncedSearch
+    debouncedSearch,
+    user?.companyId ?? 0
   );
 
   const facturas = data?.data || [];

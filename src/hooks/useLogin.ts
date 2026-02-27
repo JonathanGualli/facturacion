@@ -4,6 +4,6 @@ import { loginService } from "../services/api.service"
 export const useLogin = () => {
 
     return useMutation({
-        mutationFn: ({ email, password }: { email: string, password: string }) => loginService(email, password),
+        mutationFn: ({ email, password, companyId }: { email: string, password: string, companyId?: number }) => loginService(email, password, companyId),
     });
 }

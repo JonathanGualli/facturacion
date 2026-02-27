@@ -7,7 +7,7 @@ export const PrivateLayout = ({children}: {children: ReactNode}) => {
 
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
-    const { logOut } = useAuthContext();
+    const { logOut, user } = useAuthContext();
 
     useEffect(() => {
         const checkSize = () => {
@@ -45,9 +45,13 @@ export const PrivateLayout = ({children}: {children: ReactNode}) => {
                             <Menu size={20} />
                         </button>
                     )}
-                    <h1 className="text-lg font-bold">Comprobantes electrónicos Alfa</h1>
+                    <h1 className="text-lg font-bold">Comprobantes electrónicos {user?.companyName}</h1>
                     </div>
-                    <button type="button" className="cursor-pointer text-red-600" onClick={logOut}>Cerrar Sesión</button>
+                    <div className="flex flex-row gap-5">
+                        <h2>{user?.name}</h2>
+                        <button type="button" className="cursor-pointer text-red-600" onClick={logOut}>Cerrar Sesión</button>
+                    </div>
+                    
                 </header>
 
                 {/* Main Content */}

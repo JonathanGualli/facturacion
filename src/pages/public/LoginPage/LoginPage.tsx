@@ -11,10 +11,8 @@ export const LoginPage = () => {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const { signIn, errors, isAuthenticated, isLoading} = useAuthContext();
-
+    const { signIn, errors, isAuthenticated, isLoading, companies} = useAuthContext();
     const { setState, setContent } = useModalContext();
-
     const navigate = useNavigate();
 
 
@@ -27,6 +25,10 @@ export const LoginPage = () => {
     const handleLogin = (event: React.FormEvent) => {
         event.preventDefault();
         signIn(email, password);
+    }
+
+    const handleSelectCompany = (companyId: number) => {
+        signIn(email, password, companyId);
     }
 
     //Detectar Errores
@@ -52,9 +54,22 @@ export const LoginPage = () => {
                 </div>
                 
                 <div className='bg-white basis-2/5 p-10 flex justify-center flex-col'>
-                    <h1 className='text-center font-extrabold mb-15 mt-10'>Facturacion Alfatv</h1>
-
-                    <form onSubmit={handleLogin} className='flex flex-col'>
+                    <h1 className='text-center font-extrabold mb-15 mt-10'>Sistema De Facturacion</h1>
+                    {/**RENDERIZADO CONDICIONAL */}
+                    {companies.length > 0 ? ( <div className='flex flex-col gap-3'>
+                        <p className='text-sm text-gray-500 -mt-6.25 text-center'>
+                            Selecciona una Empresa
+                        </p>
+                        {companies.map((company) => (
+                            <CustomButton 
+                                key={company.id}
+                                onClick={() => handleSelectCompany(company.id)}
+                                isLoading={isLoading}>
+                                    {company.legalName}
+                            </CustomButton>
+                        ))}
+                    </div>) : 
+                    (<form onSubmit={handleLogin} className='flex flex-col'>
 
                         <div className='pb-4'>
                             <CustomInput 
@@ -88,10 +103,10 @@ export const LoginPage = () => {
                         
 
                         <hr className='border-t border-gray-300 mb-5 mt-5'/>
-
-{/*                         <p className='text-gray-400 text-sm text-center'>¿No tienes cuenta? <Link to={AppRoutes.register} className='text-green-500 font-bold'>Regístrate Ahora</Link></p> 
- */}                        
-                    </form>
+                      
+                    </form>)
+                    }
+                    
                 </div>
             </div>        
         </div> 

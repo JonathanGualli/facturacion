@@ -4,5 +4,6 @@ export interface User{
     email: string;
     role: 'ADMIN' | 'EMPLOYEE' | 'CLIENT';
     companyId: number;
+    companyName: string;
     status: boolean;    
 }
