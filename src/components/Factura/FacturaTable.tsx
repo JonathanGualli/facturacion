@@ -70,10 +70,30 @@ export function InvoicesTable({ data, totalCount, pagination, setPagination, isL
 
       {/* Pagination */}
       <div className="flex justify-between items-center p-3 text-sm border-t">
-        <span className="text-gray-500">
-          {/* Page {table.getState().pagination.pageIndex + 1} */}
-          Mostrando {table.getRowModel().rows.length} de {totalCount} registros
-        </span>
+{       /* Selector de cantidad de registros y contador */}
+        <div className="flex items-center gap-4 text-gray-500">
+          <div className="flex items-center gap-2">
+            <label htmlFor="pageSize">Mostrar:</label>
+            <select
+              id="pageSize"
+              value={table.getState().pagination.pageSize}
+              onChange={e => {
+                table.setPageSize(Number(e.target.value));
+              }}
+              className="border rounded p-1 text-gray-700 bg-white"
+            >
+              {[10, 20, 30, 40, 50].map(pageSize => (
+                <option key={pageSize} value={pageSize}>
+                  {pageSize}
+                </option>
+              ))}
+            </select>
+          </div>
+          
+          <span>
+            Mostrando {table.getRowModel().rows.length} de {totalCount} registros
+          </span>
+        </div>
 
         <div className="flex gap-2 items-center">
           <span className="mr-2">

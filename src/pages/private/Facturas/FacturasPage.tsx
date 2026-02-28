@@ -4,6 +4,8 @@ import { InvoicesTable } from "../../../components/Factura/FacturaTable";
 import { useDebounce } from "../../../hooks/useDebounce";
 import { useExportExcel } from "../../../hooks/useExportExcel";
 import { useAuthContext } from "../../../context/auth.context";
+import type { Updater } from "@tanstack/react-query";
+import type { PaginationState } from "@tanstack/react-table";
 
 export const FacturasPage = () => {
 
@@ -16,7 +18,26 @@ export const FacturasPage = () => {
   const debouncedSearch = useDebounce(searchTerm, 500);
   const [filterMethod, setFilterMethod] = useState(1);
   const {user} = useAuthContext();
-  
+
+  const handlePaginationChange = (updaterOrValue: Updater<PaginationState, PaginationState>) => {
+    setPagination((old) => {
+      // TanStack Table puede enviar una función o el nuevo valor directamente
+      const newPagination = 
+        typeof updaterOrValue === 'function' 
+          ? updaterOrValue(old) 
+          : updaterOrValue;
+
+      // Si el tamaño de página cambió, obligamos a volver a la página 0
+      if (newPagination.pageSize !== old.pageSize) {
+        return {
+          ...newPagination,
+          pageIndex: 0
+        };
+      }
+
+      return newPagination;
+    });
+  };
 
   const { data, isLoading, isPlaceholderData } = useFacturas(
     pagination.pageIndex + 1, 
@@ -126,7 +147,7 @@ export const FacturasPage = () => {
         data={facturas} 
         totalCount={totalCount} 
         pagination={pagination} 
-        setPagination={setPagination} 
+        setPagination={handlePaginationChange} 
         isLoading={isLoading || isPlaceholderData} 
       />
     </div>

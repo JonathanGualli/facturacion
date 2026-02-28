@@ -1,12 +1,13 @@
-export type InvoiceStatus = 
+export type InvoiceStatus =
     | "ISSUED"
     | "PROCESSED"
     | "CANCELLED"
-    | "ERROR";
+    | "ERROR"
+    | "VOIDED";
 
-export interface Invoice { 
+export interface Invoice {
     id: number;
-    issueDate: string; 
+    issueDate: string;
     invoiceNumber: string;
     accessKey: string;
     buyerBusinessName: string;

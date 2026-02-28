@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API_URL = 'https://facturacion.server.coorporativo.live/api';
-// const API_URL = 'https://localhost:44323/api';
+// const API_URL = 'http://localhost:5121/api';
 
 interface FetchParams {
     page: number;
