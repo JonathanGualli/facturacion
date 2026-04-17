@@ -3,7 +3,6 @@ import { SidebarItem } from "./SidebarItem";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AppRoutes } from "../../models/routes.models";
 import { useEffect, useMemo, useState } from "react";
-import logo from '../../assets/logo_lared.png';
 
 interface Props {
     collapsed: boolean,
@@ -49,7 +48,11 @@ export const Sidebar = ({ collapsed, toggle, isMobile }: Props) => {
             `}>
 
             <div className="flex items-center justify-between p-2">
-                {!collapsed && <span className="font-bold"><img src={logo} className="h-auto w-12"/></span>}
+                {!collapsed && (
+                    <span className="text-xl font-black tracking-tighter text-blue-600">
+                        Solventyc<span className="text-blue-400">.</span>
+                    </span>
+                )}
                 <button onClick={toggle}>
                     <Menu size={20} />
                 </button>
