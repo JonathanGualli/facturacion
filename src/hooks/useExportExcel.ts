@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { exportExcelService } from "../services/api.service";
+import type { AxiosError } from "axios";
 
 // Interfaz para agrupar los parámetros
 interface ExportExcelVariables {
@@ -32,9 +33,19 @@ export const useExportExcel = () => {
             // liberar memoria
             window.URL.revokeObjectURL(url);
         },
-        onError: (error) => {
+        onError: (error: Error) => {
             console.log("Error al descargar el Excel:", error);
-            alert("No se pudo descargar el reporte de facturas");
+
+            let errorMessage = "No se pudo descargar el reporte de facturas";
+
+            if (error.message) {
+                errorMessage = error.message;
+            } else {
+                const axiosError = error as AxiosError<string>;
+                errorMessage = axiosError?.response?.data || errorMessage;
+            }
+
+            alert(`Error al descargar el Excel:\n\n${errorMessage}`);
         }
     });
 }

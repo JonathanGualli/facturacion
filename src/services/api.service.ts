@@ -93,11 +93,23 @@ export const exportExcelService = async (startDate: string, endDate: string, fil
         params.search = search;
     }
 
-    const response = await axios.get(`${API_URL}/Facturacion/ExportarExcel`, {
-        params: params,
-        responseType: 'blob', // Vital para descargar el .xlsx sin corromperlo
-        withCredentials: true,
-    });
+    try {
+        const response = await axios.get(`${API_URL}/Facturacion/ExportarExcel`, {
+            params: params,
+            responseType: 'blob', // Vital para descargar el .xlsx sin corromperlo
+            withCredentials: true,
+        });
 
-    return response.data;
+        return response.data;
+    } catch (error) {
+        if (error instanceof Error && 'response' in error) {
+            const axiosError = error as any;
+            if (axiosError.response?.data instanceof Blob) {
+                // Si la respuesta de error es un blob, léela como texto
+                const text = await axiosError.response.data.text();
+                throw new Error(text);
+            }
+        }
+        throw error;
+    }
 }
